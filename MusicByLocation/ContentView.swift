@@ -11,15 +11,17 @@ struct ContentView: View {
     @State private var locationHandler = LocationHandler()
     var body: some View {
         VStack {
-            Text("\(locationHandler.lastKnownLocation)")
+            Text(String(locationHandler.lastKnownLocation))
+                .padding()
             Spacer()
             Button("Find Music", action: {
-                locationHandler.requestLocation()
+                locationHandler.requestLocation();
+                print(locationHandler.lastKnownLocation)
             })
         }.onAppear(perform: {
             locationHandler.requestAuthorisation()
         })
-        .padding()
+
     }
 }
 

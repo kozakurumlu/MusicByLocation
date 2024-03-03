@@ -25,6 +25,7 @@ class LocationHandler: NSObject, CLLocationManagerDelegate, ObservableObject {
     
     func requestLocation(){
         manager.requestLocation()
+        
     }
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let firstLocation = locations.first {
