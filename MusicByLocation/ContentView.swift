@@ -4,27 +4,30 @@
 //
 //  Created by Kurumlu, Koza (RCH) on 03/03/2024.
 //
-
 import SwiftUI
 
 struct ContentView: View {
-    @State private var locationHandler = LocationHandler()
+    @StateObject private var state = StateController()
+    
     var body: some View {
         VStack {
-            Text(String(locationHandler.lastKnownLocation))
+            Text(state.artistsByLocation)
                 .padding()
             Spacer()
             Button("Find Music", action: {
-                locationHandler.requestLocation();
-                print(locationHandler.lastKnownLocation)
+                state.findMusic()
             })
+            
         }.onAppear(perform: {
-            locationHandler.requestAuthorisation()
+            state.requestAccessToLocationData()
+            
         })
-
+        
     }
 }
 
-#Preview {
-    ContentView()
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
 }

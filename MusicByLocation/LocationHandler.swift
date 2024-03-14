@@ -7,39 +7,49 @@
 
 import Foundation
 import CoreLocation
-class LocationHandler: NSObject, CLLocationManagerDelegate, ObservableObject {
+
+
+
+
+class LocationHandler: NSObject, CLLocationManagerDelegate {
     let manager = CLLocationManager()
     let geocoder = CLGeocoder()
+    weak var stateController: StateController?
     
-    @Published var lastKnownLocation: String = ""
     
     override init() {
         super.init()
         manager.delegate = self
     }
     
-    
-    func requestAuthorisation(){
+    func requestAuthorisation() {
         manager.requestWhenInUseAuthorization()
-    }
-    
-    func requestLocation(){
-        manager.requestLocation()
         
     }
+ 
+    
+    
+    func requestLocation () {
+        manager.requestLocation()
+    }
+
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let firstLocation = locations.first {
-            geocoder.reverseGeocodeLocation(firstLocation, completionHandler: {(placemarks, error) in
+            geocoder.reverseGeocodeLocation(firstLocation, completionHandler: { (placemarks, error) in
                 if error != nil {
-                    self.lastKnownLocation = "Could not perform lookup"
+                    self.stateController?.lastKnownLocation = "Could not perfrom lookup of location from coordinate information"
                 } else {
-                    if let firstPlaceMark = placemarks?[0] {
-                        self.lastKnownLocation = firstPlaceMark.locality ?? "Couldn't find locality"
+                    if let firstPlacemark = placemarks?[0] {
+                        self.stateController?.lastKnownLocation = firstPlacemark.locality ?? ""
                     }
-                }})
+                }
+            })
         }
     }
+    
+    
+    
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        lastKnownLocation = "Error Finding Location"
+        self.stateController?.lastKnownLocation = "Error finding location"
     }
 }
